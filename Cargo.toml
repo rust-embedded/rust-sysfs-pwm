@@ -1,0 +1,16 @@
+[package]
+name = "sysfs-pwm"
+version = "0.1.0"
+authors = ["Paul Osborne <osbpau@gmail.com>"]
+license = "MIT/Apache-2.0"
+homepage = "https://github.com/posborne/rust-sysfs-pwm"
+documentation = "https://posborne.github.io/rust-sysfs-pwm"
+description = """
+Provides access to the Linux sysfs interfaces to PWMs.
+Via this crate you can export, unexport, and control PWM pins for
+which there is an appropriate driver loaded in the kernel.
+
+See https://www.kernel.org/doc/Documentation/pwm.txt
+"""
+
+[dependencies]
