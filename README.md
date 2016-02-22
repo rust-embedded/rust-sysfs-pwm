@@ -35,11 +35,11 @@ Controlling a PWM (this example works on the Rasbperry Pi):
 
 ```rust
 extern crate sysfs_pwm;
-use sysfs_pwm::{PWM};
+use sysfs_pwm::{Pwm};
 
 const RPI_PWM_CHIP: u32 = 1;
 
-fn pwm_increase_to_max(pwm: &PWM,
+fn pwm_increase_to_max(pwm: &Pwm,
                        duration_ms: u32,
                        update_period: u32) {
     let mut step: f32 = duration_ms / update_period;
@@ -51,7 +51,7 @@ fn pwm_increase_to_max(pwm: &PWM,
     pwm.set_duty_cycle(1.0);
 }
 
-fn pwm_decrease_to_minimum(pwm: &PWM,
+fn pwm_decrease_to_minimum(pwm: &Pwm,
                            duration_ms: u32,
                            update_period: u32) {
     let mut step: f32 = duration_ms / update_period;
@@ -66,7 +66,7 @@ fn pwm_decrease_to_minimum(pwm: &PWM,
 /// Make an LED "breathe" by increasing and
 /// decreasing the brightness
 fn main() {
-    let my_pwm = PWM::new(1, 127); // number depends on chip, etc.
+    let my_pwm = Pwm::new(1, 127); // number depends on chip, etc.
     my_pwm.with_exported(|| {
         loop {
             pwm_increase_to_max(pwm, 1000, 20);
