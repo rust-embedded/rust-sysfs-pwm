@@ -31,55 +31,19 @@ extern crate sysfs_pwm;
 Example/API
 -----------
 
-Controlling a PWM (this example works on the Rasbperry Pi):
+The main API consists of a Pwm struct with the following methods:
+* `Pwm::new` - Create a Pwm instance
+* `pwm.with_exported` - Execute a block with the Pwm exported
+* `pwm.set_active` - Enable/Disable the Pwm
+* `pwm.get_duty_cycle` - Get duty cycle as percentage of period
+* `pwm.set_duty_cycle` - Set duty cycle as percentage of period
+* `pwm.get_duty_cycle_ns` - Get duty cycle in nanoseconds
+* `pwm.set_duty_cycle_ns` - Set duty cyle in nanoseconds
+* `pwm.get_period_ns` - Get the Pwm period in nanoseconds
+* `pwm.set_period_ns` - Set the Pwm period in nanoseconds
 
-```rust
-extern crate sysfs_pwm;
-use sysfs_pwm::{Pwm};
-
-const RPI_PWM_CHIP: u32 = 1;
-
-fn pwm_increase_to_max(pwm: &Pwm,
-                       duration_ms: u32,
-                       update_period: u32) {
-    let mut step: f32 = duration_ms / update_period;
-    let duty_cycle: f32 = 0.0;
-    while duty_cycle < 1.0 {
-        pwm.set_duty_cycle(duty_cycle);
-        duty_cycle += step;
-    }
-    pwm.set_duty_cycle(1.0);
-}
-
-fn pwm_decrease_to_minimum(pwm: &Pwm,
-                           duration_ms: u32,
-                           update_period: u32) {
-    let mut step: f32 = duration_ms / update_period;
-    let mut duty_cycle = 1.0;
-    while duty_cycle > 0.0 {
-        pwm.set_duty_cycle(duty_cycle);
-        duty_cycle -= step;
-    }
-    pwm.set_duty_cycle(0.0)
-}
-
-/// Make an LED "breathe" by increasing and
-/// decreasing the brightness
-fn main() {
-    let my_pwm = Pwm::new(1, 127); // number depends on chip, etc.
-    my_pwm.with_exported(|| {
-        loop {
-            pwm_increase_to_max(pwm, 1000, 20);
-            pwm_decrease_to_minimum(pwm, 1000, 20);
-        }
-    }).unwrap();
-}
-```
-
-Features
---------
-
-...
+Check out the [Breathing LED](examples/breathe.rs) example for a usage
+example.
 
 Cross Compiling
 ---------------
