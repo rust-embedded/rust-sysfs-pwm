@@ -18,6 +18,7 @@ use std::io::prelude::*;
 use std::os::unix::prelude::*;
 use std::fs::File;
 use std::fs;
+use std::cmp::{min, max};
 
 mod error;
 pub use error::Error;
@@ -31,6 +32,12 @@ pub struct PwmChip {
 pub struct Pwm {
     chip: PwmChip,
     number: u32,
+}
+
+#[derive(Debug)]
+pub enum Polarity {
+    Normal,
+    Inverse,
 }
 
 pub type Result<T> = ::std::result::Result<T, error::Error>;
@@ -103,6 +110,35 @@ impl Pwm {
     /// Unexport the PWM
     pub fn unexport(&self) -> Result<()> {
         self.chip.unexport(self.number)
+    }
+
+    /// Enable/Disable the PWM Signal
+    pub fn set_active(active: bool) -> Result<()> {
+        Ok(())
+    }
+
+    /// Set the duty cycle as a percentage of time active
+    ///
+    /// This value is expected to be a floating point value
+    /// between 0.0 and 1.0.  It maps to a value with resolution 0 -
+    /// 1000.  Values < 0 or > 1.0 are capped at the minimum or
+    /// maximum respectively.
+    pub fn set_duty_cycle(&self, percent: f32) -> Result<()> {
+        let raw_percent_adj: u32 = (percent * 1000.0).floor() as u32;
+        let percent_adj: u32 = max(0, min(raw_percent_adj, 1000));
+        Ok(())
+    }
+
+    /// The active time of the PWM signal
+    ///
+    /// Value is in nanoseconds and must be less than the period.
+    pub fn set_duty_cycle_ns(&self, duty_cycle_ns: u32) -> Result<()> {
+        Ok(())
+    }
+
+    /// The period of the PWM signal in Nanoseconds
+    pub fn set_period_ns(&self, period_ns: u32) -> Result<()> {
+        Ok(())
     }
 
 }
