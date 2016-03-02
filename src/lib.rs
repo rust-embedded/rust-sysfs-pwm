@@ -18,9 +18,8 @@ use std::io::prelude::*;
 use std::os::unix::prelude::*;
 use std::fs::File;
 use std::fs;
+use std::fs::OpenOptions;
 use std::str::FromStr;
-use std::cmp::{min, max};
-use std::path::Path;
 
 mod error;
 pub use error::Error;
@@ -45,11 +44,12 @@ pub enum Polarity {
 pub type Result<T> = ::std::result::Result<T, error::Error>;
 
 /// Open the specified entry name as a writable file
-fn pwm_file_rw(chip: &PwmChip, pin: u32, name: &str) -> Result<File> {
-    let f = try!(File::create(format!("/sys/class/pwm/pwmchip{}/pwm{}/{}",
-                                      chip.number,
-                                      pin,
-                                      name)));
+fn pwm_file_wo(chip: &PwmChip, pin: u32, name: &str) -> Result<File> {
+    let f = try!(OpenOptions::new().write(true)
+                 .open(format!("/sys/class/pwm/pwmchip{}/pwm{}/{}",
+                               chip.number,
+                               pin,
+                               name)));
     Ok(f)
 }
 
@@ -64,7 +64,7 @@ fn pwm_file_parse<T: FromStr>(chip: &PwmChip, pin: u32, name: &str) -> Result<T>
     let mut s = String::with_capacity(10);
     let mut f = try!(pwm_file_ro(chip, pin, name));
     try!(f.read_to_string(&mut s));
-    match s.parse::<T>() {
+    match s.trim().parse::<T>() {
         Ok(r) => Ok(r),
         Err(_) => Err(Error::Unexpected(format!("Unexpeted value file contents: {:?}", s))),
     }
@@ -147,39 +147,19 @@ impl Pwm {
     }
 
     /// Enable/Disable the PWM Signal
-    pub fn set_active(&self, active: bool) -> Result<()> {
-        let mut active_file = try!(pwm_file_rw(&self.chip, self.number, "active"));
-        let contents = if active {
+    pub fn enable(&self, enable: bool) -> Result<()> {
+        let mut enable_file = try!(pwm_file_wo(&self.chip, self.number, "enable"));
+        let contents = if enable {
             "1"
         } else {
             "0"
         };
-        try!(active_file.write_all(contents.as_bytes()));
-        Ok(())
-    }
-
-    /// Get the currently configured duty cycle as a percentage
-    pub fn get_duty_cycle(&self) -> Result<f32> {
-        let raw_duty_cycle = try!(pwm_file_parse::<u32>(&self.chip, self.number, "duty"));
-        Ok((raw_duty_cycle as f32) / 1000.0)
-    }
-
-    /// Set the duty cycle as a percentage of time active
-    ///
-    /// This value is expected to be a floating point value
-    /// between 0.0 and 1.0.  It maps to a value with resolution 0 -
-    /// 1000.  Values < 0 or > 1.0 are capped at the minimum or
-    /// maximum respectively.
-    pub fn set_duty_cycle(&self, percent: f32) -> Result<()> {
-        let raw_percent_adj: u32 = (percent * 1000.0).floor() as u32;
-        let percent_adj: u32 = max(0, min(raw_percent_adj, 1000));
-        let mut dc_file = try!(pwm_file_rw(&self.chip, self.number, "duty"));
-        try!(dc_file.write_all(format!("{}", percent_adj).as_bytes()));
+        try!(enable_file.write_all(contents.as_bytes()));
         Ok(())
     }
 
     /// Get the currently configured duty_cycle in nanoseconds
-    pub fn get_duty_cycle_ns(&self, duty_cycle_ns: u32) -> Result<u32> {
+    pub fn get_duty_cycle_ns(&self) -> Result<u32> {
         pwm_file_parse::<u32>(&self.chip, self.number, "duty_cycle")
     }
 
@@ -188,7 +168,7 @@ impl Pwm {
     /// Value is in nanoseconds and must be less than the period.
     pub fn set_duty_cycle_ns(&self, duty_cycle_ns: u32) -> Result<()> {
         // we'll just let the kernel do the validation
-        let mut duty_cycle_file = try!(pwm_file_rw(&self.chip, self.number, "duty_cycle"));
+        let mut duty_cycle_file = try!(pwm_file_wo(&self.chip, self.number, "duty_cycle"));
         try!(duty_cycle_file.write_all(format!("{}", duty_cycle_ns).as_bytes()));
         Ok(())
     }
@@ -200,7 +180,7 @@ impl Pwm {
 
     /// The period of the PWM signal in Nanoseconds
     pub fn set_period_ns(&self, period_ns: u32) -> Result<()> {
-        let mut period_file = try!(pwm_file_rw(&self.chip, self.number, "period"));
+        let mut period_file = try!(pwm_file_wo(&self.chip, self.number, "period"));
         try!(period_file.write_all(format!("{}", period_ns).as_bytes()));
         Ok(())
     }
