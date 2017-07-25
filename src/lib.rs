@@ -87,9 +87,7 @@ impl PwmChip {
 
     pub fn export(&self, number: u32) -> Result<()> {
         // only export if not already exported
-        if let Err(_) = fs::metadata(&format!("/sys/class/pwm/pwmchip{}/pwm{}",
-                                              self.number,
-                                              number)) {
+        if fs::metadata(&format!("/sys/class/pwm/pwmchip{}/pwm{}", self.number, number)).is_err() {
             let path = format!("/sys/class/pwm/pwmchip{}/export", self.number);
             let mut export_file = File::create(&path)?;
             let _ = export_file.write_all(format!("{}", number).as_bytes());
@@ -98,9 +96,7 @@ impl PwmChip {
     }
 
     pub fn unexport(&self, number: u32) -> Result<()> {
-        if let Ok(_) = fs::metadata(&format!("/sys/class/pwm/pwmchip{}/pwm{}",
-                                             self.number,
-                                             number)) {
+        if fs::metadata(&format!("/sys/class/pwm/pwmchip{}/pwm{}", self.number, number)).is_ok() {
             let path = format!("/sys/class/pwm/pwmchip{}/unexport", self.number);
             let mut export_file = File::create(&path)?;
             let _ = export_file.write_all(format!("{}", number).as_bytes());
