@@ -124,8 +124,7 @@ impl Pwm {
     {
         self.export()?;
         match closure() {
-            Ok(()) => self.unexport(),
-            Err(_) => self.unexport(),
+            Ok(()) | Err(_) => self.unexport(),
         }
     }
 
