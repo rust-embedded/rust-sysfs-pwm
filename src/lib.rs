@@ -158,6 +158,17 @@ impl Pwm {
         Ok(())
     }
 
+    /// Query the state of enable for a given PWM pin
+    pub fn get_enabled(&self) -> Result<bool> {
+        pwm_file_parse::<u32>(&self.chip, self.number, "enable").map(|enable_state| {
+            match enable_state {
+                1 => true,
+                0 => false,
+                _ => panic!("enable != 1|0 should be unreachable")
+            }
+        })
+    }
+
     /// Get the currently configured duty_cycle in nanoseconds
     pub fn get_duty_cycle_ns(&self) -> Result<u32> {
         pwm_file_parse::<u32>(&self.chip, self.number, "duty_cycle")
