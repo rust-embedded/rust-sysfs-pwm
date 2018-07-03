@@ -95,7 +95,8 @@ impl PwmChip {
                                               number)) {
             let path = format!("/sys/class/pwm/pwmchip{}/export", self.number);
             let mut export_file = try!(File::create(&path));
-            let _ = export_file.write_all(format!("{}", number).as_bytes());
+            let _ = export_file.write_all(format!("{}", number).as_bytes())?;
+            export_file.sync_data()?;
         }
         Ok(())
     }
@@ -107,6 +108,7 @@ impl PwmChip {
             let path = format!("/sys/class/pwm/pwmchip{}/unexport", self.number);
             let mut export_file = try!(File::create(&path));
             let _ = export_file.write_all(format!("{}", number).as_bytes());
+            export_file.sync_data()?;
         }
         Ok(())
     }
@@ -154,7 +156,8 @@ impl Pwm {
         } else {
             "0"
         };
-        try!(enable_file.write_all(contents.as_bytes()));
+        enable_file.write_all(contents.as_bytes())?;
+        enable_file.sync_data()?;
         Ok(())
     }
 
@@ -169,7 +172,8 @@ impl Pwm {
     pub fn set_duty_cycle_ns(&self, duty_cycle_ns: u32) -> Result<()> {
         // we'll just let the kernel do the validation
         let mut duty_cycle_file = try!(pwm_file_wo(&self.chip, self.number, "duty_cycle"));
-        try!(duty_cycle_file.write_all(format!("{}", duty_cycle_ns).as_bytes()));
+        duty_cycle_file.write_all(format!("{}", duty_cycle_ns).as_bytes())?;
+        duty_cycle_file.sync_data()?;
         Ok(())
     }
 
@@ -181,7 +185,8 @@ impl Pwm {
     /// The period of the PWM signal in Nanoseconds
     pub fn set_period_ns(&self, period_ns: u32) -> Result<()> {
         let mut period_file = try!(pwm_file_wo(&self.chip, self.number, "period"));
-        try!(period_file.write_all(format!("{}", period_ns).as_bytes()));
+        period_file.write_all(format!("{}", period_ns).as_bytes())?;
+        period_file.sync_data()?;
         Ok(())
     }
 }
