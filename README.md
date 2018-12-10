@@ -1,5 +1,4 @@
-rust-sysfs-pwm
-==============
+# rust-sysfs-pwm
 
 [![Build Status](https://travis-ci.org/posborne/rust-sysfs-pwm.svg?branch=master)](https://travis-ci.org/posborne/rust-sysfs-pwm)
 [![Version](https://img.shields.io/crates/v/sysfs-pwm.svg)](https://crates.io/crates/sysfs-pwm)
@@ -11,8 +10,7 @@ rust-sysfs-pwm is a rust library/crate providing access to the [Linux
 sysfs PWM interface](https://www.kernel.org/doc/Documentation/pwm.txt).
 It seeks to provide an API that is safe, convenient, and efficient.
 
-Install/Use
------------
+## Install/Use
 
 To use `sysfs-pwm`, first add this to your `Cargo.toml`:
 
@@ -28,8 +26,7 @@ Then, add this to your crate root:
 extern crate sysfs_pwm;
 ```
 
-Example/API
------------
+## Example/API
 
 The main API consists of a Pwm struct with the following methods:
 * `Pwm::new` - Create a Pwm instance
@@ -45,8 +42,7 @@ The main API consists of a Pwm struct with the following methods:
 Check out the [Breathing LED](examples/breathe.rs) example for a usage
 example.
 
-Cross Compiling
----------------
+## Cross Compiling
 
 Most likely, the machine you are running on is not your development
 machine (although it could be).  In those cases, you will need to
@@ -55,8 +51,7 @@ compiling for your platform.
 
 [rust-cross]: https://github.com/japaric/rust-cross
 
-Running the Example
--------------------
+## Running the Example
 
 Cross-compiling can be done by specifying an appropriate target.  You
 can then move that to your device by whatever means and run it.
@@ -66,15 +61,27 @@ $ cargo build --target=arm-unknown-linux-gnueabihf --example breathe
 $ scp target/arm-unknown-linux-gnueabihf/debug/examples/breathe ...
 ```
 
-License
--------
+## License
 
-```
-Copyright (c) 2016, Paul Osborne <ospbau@gmail.com>
+Licensed under either of
 
-Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
-http://www.apache.org/license/LICENSE-2.0> or the MIT license
-<LICENSE-MIT or http://opensource.org/licenses/MIT>, at your
-option.  This file may not be copied, modified, or distributed
-except according to those terms.
-```
+- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or
+  http://www.apache.org/licenses/LICENSE-2.0)
+- MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+
+at your option.
+
+### Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in the work by you, as defined in the Apache-2.0 license, shall be
+dual licensed as above, without any additional terms or conditions.
+
+## Code of Conduct
+
+Contribution to this crate is organized under the terms of the [Rust Code of
+Conduct][CoC], the maintainer of this crate, the [Embedded Linux Team][team], promises
+to intervene to uphold that code of conduct.
+
+[CoC]: CODE_OF_CONDUCT.md
+[team]: https://github.com/rust-embedded/wg#the-embedded-linux-team
