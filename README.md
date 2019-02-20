@@ -1,6 +1,6 @@
 # rust-sysfs-pwm
 
-[![Build Status](https://travis-ci.org/posborne/rust-sysfs-pwm.svg?branch=master)](https://travis-ci.org/posborne/rust-sysfs-pwm)
+[![Build Status](https://travis-ci.org/rust-embedded/rust-sysfs-pwm.svg?branch=master)](https://travis-ci.org/posborne/rust-sysfs-pwm)
 [![Version](https://img.shields.io/crates/v/sysfs-pwm.svg)](https://crates.io/crates/sysfs-pwm)
 [![License](https://img.shields.io/crates/l/sysfs-pwm.svg)](https://github.com/posborne/rust-sysfs-pwm/blob/master/README.md#license)
 
