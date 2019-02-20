@@ -9,9 +9,6 @@
 // Portions of this implementation are based on work by Nat Pryce:
 // https://github.com/npryce/rusty-pi/blob/master/src/pi/gpio.rs
 
-#![crate_type = "lib"]
-#![crate_name = "sysfs_pwm"]
-
 //! PWM access under Linux using the PWM sysfs interface
 
 use std::fs;
