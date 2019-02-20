@@ -26,6 +26,11 @@ Then, add this to your crate root:
 extern crate sysfs_pwm;
 ```
 
+## MSRV (Minimum Supported Rust Version)
+
+This crate is guaranteed to compile on stable Rust 1.28.0 and up. It *might*
+compile with older versions but that may change in any new patch release.
+
 ## Example/API
 
 The main API consists of a Pwm struct with the following methods:
