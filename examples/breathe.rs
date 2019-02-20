@@ -43,12 +43,12 @@ fn pwm_decrease_to_minimum(pwm: &Pwm, duration_ms: u32, update_period_ms: u32) -
 fn main() {
     let pwm = Pwm::new(BB_PWM_CHIP, BB_PWM_NUMBER).unwrap(); // number depends on chip, etc.
     pwm.with_exported(|| {
-                           pwm.enable(true).unwrap();
-                           pwm.set_period_ns(20_000).unwrap();
-                           loop {
-                               pwm_increase_to_max(&pwm, 1000, 20).unwrap();
-                               pwm_decrease_to_minimum(&pwm, 1000, 20).unwrap();
-                           }
-                       })
-        .unwrap();
+        pwm.enable(true).unwrap();
+        pwm.set_period_ns(20_000).unwrap();
+        loop {
+            pwm_increase_to_max(&pwm, 1000, 20).unwrap();
+            pwm_decrease_to_minimum(&pwm, 1000, 20).unwrap();
+        }
+    })
+    .unwrap();
 }
