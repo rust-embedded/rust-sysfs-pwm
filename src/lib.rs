@@ -9,15 +9,12 @@
 // Portions of this implementation are based on work by Nat Pryce:
 // https://github.com/npryce/rusty-pi/blob/master/src/pi/gpio.rs
 
-#![crate_type = "lib"]
-#![crate_name = "sysfs_pwm"]
-
 //! PWM access under Linux using the PWM sysfs interface
 
-use std::io::prelude::*;
-use std::fs::File;
 use std::fs;
+use std::fs::File;
 use std::fs::OpenOptions;
+use std::io::prelude::*;
 use std::str::FromStr;
 
 mod error;
@@ -44,15 +41,19 @@ pub type Result<T> = ::std::result::Result<T, error::Error>;
 
 /// Open the specified entry name as a writable file
 fn pwm_file_wo(chip: &PwmChip, pin: u32, name: &str) -> Result<File> {
-    let f = OpenOptions::new()
-        .write(true)
-        .open(format!("/sys/class/pwm/pwmchip{}/pwm{}/{}", chip.number, pin, name))?;
+    let f = OpenOptions::new().write(true).open(format!(
+        "/sys/class/pwm/pwmchip{}/pwm{}/{}",
+        chip.number, pin, name
+    ))?;
     Ok(f)
 }
 
 /// Open the specified entry name as a readable file
 fn pwm_file_ro(chip: &PwmChip, pin: u32, name: &str) -> Result<File> {
-    let f = File::open(format!("/sys/class/pwm/pwmchip{}/pwm{}/{}", chip.number, pin, name))?;
+    let f = File::open(format!(
+        "/sys/class/pwm/pwmchip{}/pwm{}/{}",
+        chip.number, pin, name
+    ))?;
     Ok(f)
 }
 
@@ -63,10 +64,12 @@ fn pwm_file_parse<T: FromStr>(chip: &PwmChip, pin: u32, name: &str) -> Result<T>
     f.read_to_string(&mut s)?;
     match s.trim().parse::<T>() {
         Ok(r) => Ok(r),
-        Err(_) => Err(Error::Unexpected(format!("Unexpeted value file contents: {:?}", s))),
+        Err(_) => Err(Error::Unexpected(format!(
+            "Unexpeted value file contents: {:?}",
+            s
+        ))),
     }
 }
-
 
 impl PwmChip {
     pub fn new(number: u32) -> Result<PwmChip> {
@@ -81,13 +84,21 @@ impl PwmChip {
         npwm_file.read_to_string(&mut s)?;
         match s.parse::<u32>() {
             Ok(n) => Ok(n),
-            Err(_) => Err(Error::Unexpected(format!("Unexpected npwm contents: {:?}", s))),
+            Err(_) => Err(Error::Unexpected(format!(
+                "Unexpected npwm contents: {:?}",
+                s
+            ))),
         }
     }
 
     pub fn export(&self, number: u32) -> Result<()> {
         // only export if not already exported
-        if fs::metadata(&format!("/sys/class/pwm/pwmchip{}/pwm{}", self.number, number)).is_err() {
+        if fs::metadata(&format!(
+            "/sys/class/pwm/pwmchip{}/pwm{}",
+            self.number, number
+        ))
+        .is_err()
+        {
             let path = format!("/sys/class/pwm/pwmchip{}/export", self.number);
             let mut export_file = File::create(&path)?;
             let _ = export_file.write_all(format!("{}", number).as_bytes());
@@ -96,7 +107,12 @@ impl PwmChip {
     }
 
     pub fn unexport(&self, number: u32) -> Result<()> {
-        if fs::metadata(&format!("/sys/class/pwm/pwmchip{}/pwm{}", self.number, number)).is_ok() {
+        if fs::metadata(&format!(
+            "/sys/class/pwm/pwmchip{}/pwm{}",
+            self.number, number
+        ))
+        .is_ok()
+        {
             let path = format!("/sys/class/pwm/pwmchip{}/unexport", self.number);
             let mut export_file = File::create(&path)?;
             let _ = export_file.write_all(format!("{}", number).as_bytes());
@@ -112,15 +128,16 @@ impl Pwm {
     pub fn new(chip: u32, number: u32) -> Result<Pwm> {
         let chip: PwmChip = PwmChip::new(chip)?;
         Ok(Pwm {
-               chip: chip,
-               number: number,
-           })
+            chip: chip,
+            number: number,
+        })
     }
 
     /// Run a closure with the GPIO exported
     #[inline]
     pub fn with_exported<F>(&self, closure: F) -> Result<()>
-        where F: FnOnce() -> Result<()>
+    where
+        F: FnOnce() -> Result<()>,
     {
         self.export()?;
         match closure() {
@@ -152,7 +169,7 @@ impl Pwm {
             match enable_state {
                 1 => true,
                 0 => false,
-                _ => panic!("enable != 1|0 should be unreachable")
+                _ => panic!("enable != 1|0 should be unreachable"),
             }
         })
     }
@@ -168,8 +185,7 @@ impl Pwm {
     pub fn set_duty_cycle_ns(&self, duty_cycle_ns: u32) -> Result<()> {
         // we'll just let the kernel do the validation
         let mut duty_cycle_file = pwm_file_wo(&self.chip, self.number, "duty_cycle")?;
-        duty_cycle_file
-            .write_all(format!("{}", duty_cycle_ns).as_bytes())?;
+        duty_cycle_file.write_all(format!("{}", duty_cycle_ns).as_bytes())?;
         Ok(())
     }
 
@@ -181,8 +197,7 @@ impl Pwm {
     /// The period of the PWM signal in Nanoseconds
     pub fn set_period_ns(&self, period_ns: u32) -> Result<()> {
         let mut period_file = pwm_file_wo(&self.chip, self.number, "period")?;
-        period_file
-            .write_all(format!("{}", period_ns).as_bytes())?;
+        period_file.write_all(format!("{}", period_ns).as_bytes())?;
         Ok(())
     }
 }
