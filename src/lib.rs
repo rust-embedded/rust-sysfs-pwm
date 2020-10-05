@@ -141,7 +141,14 @@ impl Pwm {
     {
         self.export()?;
         match closure() {
-            Ok(()) | Err(_) => self.unexport(),
+            Ok(()) => self.unexport(),
+            Err(e) => match self.unexport() {
+                Ok(()) => Err(e),
+                Err(ue) => Err(error::Error::Unexpected(format!(
+                    "Failed unexporting due to:\n{}\nwhile handling:\n{}",
+                    ue, e
+                ))),
+            },
         }
     }
 
