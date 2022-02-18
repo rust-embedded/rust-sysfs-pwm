@@ -220,4 +220,28 @@ impl Pwm {
         period_file.write_all(format!("{}", period_ns).as_bytes())?;
         Ok(())
     }
+
+    /// Set the polarity of the PWM signal
+    pub fn set_polarity(&self, polarity: Polarity) -> Result<()> {
+        let mut polarity_file = pwm_file_wo(&self.chip, self.number, "polarity")?;
+        match polarity {
+            Polarity::Normal => polarity_file.write_all("normal".as_bytes())?,
+            Polarity::Inverse => polarity_file.write_all("inversed".as_bytes())?,
+        };
+        Ok(())
+    }
+
+    /// Get the polarity of the PWM signal
+    pub fn get_polarity(&self) -> Result<Polarity> {
+        let mut polarity_file = pwm_file_ro(&self.chip, self.number, "polarity")?;
+        let mut s = String::new();
+        polarity_file.read_to_string(&mut s)?;
+        match s.trim() {
+            "normal" => Ok(Polarity::Normal),
+            "inversed" => Ok(Polarity::Inverse),
+            _ => Err(Error::Unexpected(format!(
+                        "Unexpected polarity file contents: {:?}",
+                        s))),
+        }
+    }
 }
