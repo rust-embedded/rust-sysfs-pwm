@@ -186,6 +186,11 @@ impl Pwm {
         pwm_file_parse::<u32>(&self.chip, self.number, "duty_cycle")
     }
 
+    /// Get the capture
+    pub fn get_capture(&self) -> Result<u32> {
+        pwm_file_parse::<u32>(&self.chip, self.number, "capture")
+    }
+
     /// The active time of the PWM signal
     ///
     /// Value is in nanoseconds and must be less than the period.
@@ -240,8 +245,9 @@ impl Pwm {
             "normal" => Ok(Polarity::Normal),
             "inversed" => Ok(Polarity::Inverse),
             _ => Err(Error::Unexpected(format!(
-                        "Unexpected polarity file contents: {:?}",
-                        s))),
+                "Unexpected polarity file contents: {:?}",
+                s
+            ))),
         }
     }
 }
