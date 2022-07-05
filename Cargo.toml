@@ -1,11 +1,14 @@
 [package]
 name = "sysfs-pwm"
 version = "0.2.0"
-authors = ["Rust Embedded WG Linux Team <embedded-linux@teams.rust-embedded.org>",
-           "Paul Osborne <osbpau@gmail.com>"]
+authors = [
+    "Rust Embedded WG Linux Team <embedded-linux@teams.rust-embedded.org>",
+    "Paul Osborne <osbpau@gmail.com>"
+]
 license = "MIT/Apache-2.0"
+repository = "https://github.com/rust-embedded/rust-sysfs-pwm"
 homepage = "https://github.com/rust-embedded/rust-sysfs-pwm"
-documentation = "https://docs.rs/rust-sysfs-pwm"
+documentation = "https://docs.rs/sysfs-pwm"
 description = """
 Provides access to the Linux sysfs interfaces to PWMs.
 Via this crate you can export, unexport, and control PWM pins for
@@ -13,5 +16,6 @@ which there is an appropriate driver loaded in the kernel.
 
 See https://www.kernel.org/doc/Documentation/pwm.txt
 """
+readme = "README.md"
 
 [dependencies]
