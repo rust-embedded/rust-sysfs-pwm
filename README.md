@@ -1,7 +1,8 @@
-# rust-sysfs-pwm
+# sysfs-pwm
 
-[![Build Status](https://travis-ci.org/rust-embedded/rust-sysfs-pwm.svg?branch=master)](https://travis-ci.org/rust-embedded/rust-sysfs-pwm)
+[![Build Status](https://github.com/rust-embedded/rust-sysfs-pwm/workflows/CI/badge.svg)](https://github.com/rust-embedded/rust-sysfs-pwm/actions)
 [![Version](https://img.shields.io/crates/v/sysfs-pwm.svg)](https://crates.io/crates/sysfs-pwm)
+![Minimum Supported Rust Version](https://img.shields.io/badge/rustc-1.28+-blue.svg)
 [![License](https://img.shields.io/crates/l/sysfs-pwm.svg)](README.md#license)
 
 - [API Documentation](https://docs.rs/sysfs-pwm)
@@ -17,13 +18,13 @@ To use `sysfs-pwm`, first add this to your `Cargo.toml`:
 ```toml
 [dependencies]
 # or latest version
-sysfs-pwm = "^0.1.0"
+sysfs-pwm = "0.2.0"
 ```
 
 Then, add this to your crate root:
 
 ```rust
-extern crate sysfs_pwm;
+use sysfs_pwm;
 ```
 
 ## MSRV (Minimum Supported Rust Version)
@@ -54,7 +55,7 @@ machine (although it could be).  In those cases, you will need to
 cross-compile.  The [instructions here][rust-cross] provide great details on cross
 compiling for your platform.
 
-[rust-cross]: https://github.com/japaric/rust-cross
+[rust-cross]: https://github.com/cross-rs/cross
 
 ## Running the Example
 
