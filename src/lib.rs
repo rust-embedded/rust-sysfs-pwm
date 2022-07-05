@@ -91,7 +91,7 @@ fn pwm_capture_parse<T: FromStr>(chip: &PwmChip, pin: u32, name: &str) -> Result
 impl PwmChip {
     pub fn new(number: u32) -> Result<PwmChip> {
         fs::metadata(&format!("/sys/class/pwm/pwmchip{}", number))?;
-        Ok(PwmChip { number: number })
+        Ok(PwmChip { number })
     }
 
     pub fn count(&self) -> Result<u32> {
@@ -144,10 +144,7 @@ impl Pwm {
     /// This function does not export the Pwm pin
     pub fn new(chip: u32, number: u32) -> Result<Pwm> {
         let chip: PwmChip = PwmChip::new(chip)?;
-        Ok(Pwm {
-            chip: chip,
-            number: number,
-        })
+        Ok(Pwm { chip, number })
     }
 
     /// Run a closure with the GPIO exported
