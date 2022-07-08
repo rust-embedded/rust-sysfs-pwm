@@ -71,6 +71,22 @@ fn pwm_file_parse<T: FromStr>(chip: &PwmChip, pin: u32, name: &str) -> Result<T>
     }
 }
 
+/// Get the two u32 from capture file descriptor
+fn pwm_capture_parse<T: FromStr>(chip: &PwmChip, pin: u32, name: &str) -> Result<Vec<T>> {
+    let mut s = String::with_capacity(10);
+    let mut f = pwm_file_ro(chip, pin, name)?;
+    f.read_to_string(&mut s)?;
+    s = s.trim().to_string();
+    let capture = s.split_whitespace().collect::<Vec<_>>();
+    let mut vec: Vec<T> = vec![];
+    for s in capture.iter() {
+        if let Ok(j) = s.parse::<T>() {
+            vec.push(j);
+        }
+    }
+    Ok(vec)
+}
+
 impl PwmChip {
     pub fn new(number: u32) -> Result<PwmChip> {
         fs::metadata(&format!("/sys/class/pwm/pwmchip{}", number))?;
@@ -181,6 +197,16 @@ impl Pwm {
     /// Get the currently configured duty_cycle in nanoseconds
     pub fn get_duty_cycle_ns(&self) -> Result<u32> {
         pwm_file_parse::<u32>(&self.chip, self.number, "duty_cycle")
+    }
+
+    /// Get the capture
+    pub fn get_capture(&self) -> Result<(u32, u32)> {
+        let t = pwm_capture_parse::<u32>(&self.chip, self.number, "capture")?;
+        if t.len() == 2 {
+            Ok((t[0], t[1]))
+        } else {
+            Err(error::Error::Unexpected(format!("Failed exporting")))
+        }
     }
 
     /// The active time of the PWM signal
