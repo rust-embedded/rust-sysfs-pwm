@@ -18,13 +18,8 @@ status = [
     "CI (stable, x86_64-unknown-linux-musl)",
     "CI (stable, x86_64-apple-darwin)",
 
-    "CI (stable, --features=async-tokio, x86_64-unknown-linux-gnu)",
-    "CI (stable, --features=mio-evented, x86_64-unknown-linux-gnu)",
-
-    "CI (1.46.0, --features=async-tokio, x86_64-unknown-linux-gnu)",
-    "CI (1.46.0, --features=mio-evented, x86_64-unknown-linux-gnu)",
-    "CI (1.46.0, x86_64-unknown-linux-gnu)",
-    "CI (1.46.0, x86_64-apple-darwin)",
+    "CI (1.28.0, x86_64-unknown-linux-gnu)",
+    "CI (1.28.0, x86_64-apple-darwin)",
 
     "checks"
 ]
