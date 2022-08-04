@@ -17,6 +17,7 @@ use std::fs::OpenOptions;
 use std::io::prelude::*;
 use std::str::FromStr;
 
+pub mod async_pwm;
 mod error;
 pub use error::Error;
 

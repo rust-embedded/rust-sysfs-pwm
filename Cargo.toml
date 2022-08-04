@@ -1,6 +1,7 @@
 [package]
 name = "sysfs-pwm"
 version = "0.2.0"
+edition = "2021"
 authors = ["Rust Embedded WG Linux Team <embedded-linux@teams.rust-embedded.org>",
            "Paul Osborne <osbpau@gmail.com>"]
 license = "MIT/Apache-2.0"
@@ -15,3 +16,4 @@ See https://www.kernel.org/doc/Documentation/pwm.txt
 """
 
 [dependencies]
+tokio = { version = "1", features = ["full"] }
