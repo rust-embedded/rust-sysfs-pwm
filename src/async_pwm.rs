@@ -82,7 +82,9 @@ impl PwmChip {
         {
             let path = format!("/sys/class/pwm/pwmchip{}/export", self.number);
             let mut export_file = File::create(&path).await?;
-            let _ = export_file.write_all(format!("{}", number).as_bytes());
+            let _ = export_file
+                .write_all(format!("{}", number).as_bytes())
+                .await;
         }
         Ok(())
     }
@@ -97,7 +99,9 @@ impl PwmChip {
         {
             let path = format!("/sys/class/pwm/pwmchip{}/unexport", self.number);
             let mut export_file = File::create(&path).await?;
-            let _ = export_file.write_all(format!("{}", number).as_bytes());
+            let _ = export_file
+                .write_all(format!("{}", number).as_bytes())
+                .await;
         }
         Ok(())
     }
