@@ -115,7 +115,6 @@ impl PwmChipAsync {
                 .write_all(format!("{}", number).as_bytes())
                 .await;
             let _ = export_file.sync_all().await;
-            println!("EXPORT SUCCESS");
         }
         Ok(())
     }
