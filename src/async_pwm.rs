@@ -114,6 +114,8 @@ impl PwmChipAsync {
             let _ = export_file
                 .write_all(format!("{}", number).as_bytes())
                 .await;
+            let _ = export_file.sync_all().await;
+            println!("EXPORT SUCCESS");
         }
         Ok(())
     }
@@ -131,6 +133,7 @@ impl PwmChipAsync {
             let _ = export_file
                 .write_all(format!("{}", number).as_bytes())
                 .await;
+            let _ = export_file.sync_all().await;
         }
         Ok(())
     }
@@ -222,6 +225,7 @@ impl PwmAsync {
         period_file
             .write_all(format!("{}", period_ns).as_bytes())
             .await?;
+        let _ = period_file.sync_all().await;
         Ok(())
     }
 
@@ -234,6 +238,7 @@ impl PwmAsync {
         duty_cycle_file
             .write_all(format!("{}", duty_cycle_ns).as_bytes())
             .await?;
+        let _ = duty_cycle_file.sync_all().await;
         Ok(())
     }
 
@@ -242,6 +247,7 @@ impl PwmAsync {
         let mut enable_file = pwm_file_wo(&self.chip, self.number, "enable").await?;
         let contents = if enable { "1" } else { "0" };
         enable_file.write_all(contents.as_bytes()).await?;
+        let _ = enable_file.sync_all().await;
         Ok(())
     }
 }
