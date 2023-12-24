@@ -44,17 +44,30 @@ fn pwm_file_wo(chip: &PwmChip, pin: u32, name: &str) -> Result<File> {
     let f = OpenOptions::new().write(true).open(format!(
         "/sys/class/pwm/pwmchip{}/pwm{}/{}",
         chip.number, pin, name
-    ))?;
-    Ok(f)
+    ));
+    if !f.is_ok() {
+        let f = OpenOptions::new().write(true).open(format!(
+            "/sys/class/pwm/pwmchip{}/pwm-{}:{}/{}",
+            chip.number, chip.number, pin, name
+        ))?;
+        return Ok(f);
+    }
+    Ok(f.unwrap())
 }
-
 /// Open the specified entry name as a readable file
 fn pwm_file_ro(chip: &PwmChip, pin: u32, name: &str) -> Result<File> {
     let f = File::open(format!(
-        "/sys/class/pwm/pwmchip{}/pwm{}/{}",
+        "/sys/class/pwm/pwmchip{}/pwm{}-{}:",
         chip.number, pin, name
-    ))?;
-    Ok(f)
+    ));
+    if !f.is_ok() {
+        let f = File::open(format!(
+            "/sys/class/pwm/pwmchip{}/pwm{}-{}:/{}",
+            chip.number, chip.number, pin, name
+        ))?;
+        return Ok(f);
+    }
+    Ok(f.unwrap())
 }
 
 /// Get the u32 value from the given entry
