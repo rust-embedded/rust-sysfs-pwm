@@ -220,15 +220,15 @@ impl Pwm {
     }
 
     /// Get the currently configured duty_cycle as percentage of period
-    pub fn get_duty_cycle(&self) -> Result<f32> {
-        Ok((self.get_duty_cycle_ns()? as f32) / (self.get_period_ns()? as f32))
+    pub fn get_duty_cycle<F>(&self) -> Result<f64> {
+        Ok((self.get_duty_cycle_ns()? as f64) / (self.get_period_ns()? as f64))
     }
 
     /// The active time of the PWM signal
     ///
     /// Value is as percentage of period.
-    pub fn set_duty_cycle(&self, duty_cycle: f32) -> Result<()> {
-        self.set_duty_cycle_ns((self.get_period_ns()? as f32 * duty_cycle).round() as u32)?;
+    pub fn set_duty_cycle(&self, duty_cycle: f64) -> Result<()> {
+        self.set_duty_cycle_ns((self.get_period_ns()? as f64 * duty_cycle).round() as u32)?;
         Ok(())
     }
 

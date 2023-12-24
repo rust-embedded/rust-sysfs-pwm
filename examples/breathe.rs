@@ -17,22 +17,22 @@ const BB_PWM_CHIP: u32 = 0;
 const BB_PWM_NUMBER: u32 = 0;
 
 fn pwm_increase_to_max(pwm: &Pwm, duration_ms: u32, update_period_ms: u32) -> Result<()> {
-    let step: f32 = duration_ms as f32 / update_period_ms as f32;
+    let step: f64 = duration_ms as f64 / update_period_ms as f64;
     let mut duty_cycle = 0.0;
     let period_ns: u32 = pwm.get_period_ns()?;
     while duty_cycle < 1.0 {
-        pwm.set_duty_cycle_ns((duty_cycle * period_ns as f32) as u32)?;
+        pwm.set_duty_cycle_ns((duty_cycle * period_ns as f64) as u32)?;
         duty_cycle += step;
     }
     pwm.set_duty_cycle_ns(period_ns)
 }
 
 fn pwm_decrease_to_minimum(pwm: &Pwm, duration_ms: u32, update_period_ms: u32) -> Result<()> {
-    let step: f32 = duration_ms as f32 / update_period_ms as f32;
+    let step: f64 = duration_ms as f64 / update_period_ms as f64;
     let mut duty_cycle = 1.0;
     let period_ns: u32 = pwm.get_period_ns()?;
     while duty_cycle > 0.0 {
-        pwm.set_duty_cycle_ns((duty_cycle * period_ns as f32) as u32)?;
+        pwm.set_duty_cycle_ns((duty_cycle * period_ns as f64) as u32)?;
         duty_cycle -= step;
     }
     pwm.set_duty_cycle_ns(0)
