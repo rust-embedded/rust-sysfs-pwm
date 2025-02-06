@@ -17,5 +17,7 @@ which there is an appropriate driver loaded in the kernel.
 See https://www.kernel.org/doc/Documentation/pwm.txt
 """
 readme = "README.md"
+categories = ["embedded", "hardware-support"]
+keywords = ["linux", "pwm"]
 
 [dependencies]
