@@ -35,9 +35,6 @@ jobs:
           - x86_64-unknown-linux-musl
 
         include:
-          - rust: 1.28.0
-            TARGET: x86_64-unknown-linux-gnu
-
           # Test nightly but don't fail
           - rust: nightly
             TARGET: x86_64-unknown-linux-gnu
@@ -60,7 +57,7 @@ jobs:
           args: --target=${{ matrix.TARGET }}
 
   ci-linux-msrv:
-    name: CI
+    name: CI-MSRV
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -72,22 +69,21 @@ jobs:
       - run: cargo test
 
   ci-macos:
-    name: CI
-    runs-on: macos-11
-
-    strategy:
-      matrix:
-        rust: [stable, 1.28.0]
-        TARGET: [x86_64-apple-darwin]
+    name: CI-macOS
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: ${{ matrix.rust }}
-          target: ${{ matrix.target }}
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo build
 
-      - run: cargo build --target=${{ matrix.TARGET }}
+  ci-macos-msrv:
+    name: CI-macOS-MSRV
+    runs-on: macos-13 # Latest for Intel-based CPUs
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.28.0
+      - run: cargo build
 
   checks:
     runs-on: ubuntu-latest
