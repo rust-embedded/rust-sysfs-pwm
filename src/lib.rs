@@ -89,7 +89,7 @@ fn pwm_capture_parse<T: FromStr>(chip: &PwmChip, pin: u32, name: &str) -> Result
 
 impl PwmChip {
     pub fn new(number: u32) -> Result<PwmChip> {
-        fs::metadata(&format!("/sys/class/pwm/pwmchip{}", number))?;
+        fs::metadata(format!("/sys/class/pwm/pwmchip{}", number))?;
         Ok(PwmChip { number })
     }
 
@@ -109,7 +109,7 @@ impl PwmChip {
 
     pub fn export(&self, number: u32) -> Result<()> {
         // only export if not already exported
-        if fs::metadata(&format!(
+        if fs::metadata(format!(
             "/sys/class/pwm/pwmchip{}/pwm{}",
             self.number, number
         ))
@@ -123,7 +123,7 @@ impl PwmChip {
     }
 
     pub fn unexport(&self, number: u32) -> Result<()> {
-        if fs::metadata(&format!(
+        if fs::metadata(format!(
             "/sys/class/pwm/pwmchip{}/pwm{}",
             self.number, number
         ))
@@ -205,7 +205,7 @@ impl Pwm {
         if t.len() == 2 {
             Ok((t[0], t[1]))
         } else {
-            Err(error::Error::Unexpected(format!("Failed exporting")))
+            Err(error::Error::Unexpected("Failed exporting".to_string()))
         }
     }
 

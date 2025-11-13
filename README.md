@@ -3,7 +3,6 @@
 [![Build Status](https://github.com/rust-embedded/rust-sysfs-pwm/workflows/CI/badge.svg)](https://github.com/rust-embedded/rust-sysfs-pwm/actions)
 [![Version](https://img.shields.io/crates/v/sysfs-pwm.svg)](https://crates.io/crates/sysfs-pwm)
 ![Minimum Supported Rust Version](https://img.shields.io/badge/rustc-1.28+-blue.svg)
-[![License](https://img.shields.io/crates/l/sysfs-pwm.svg)](README.md#license)
 
 - [API Documentation](https://docs.rs/sysfs-pwm)
 
