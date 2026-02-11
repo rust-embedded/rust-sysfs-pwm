@@ -75,7 +75,7 @@ jobs:
 
   ci-macos-msrv:
     name: CI-macOS-MSRV
-    runs-on: macos-13 # Latest for Intel-based CPUs
+    runs-on: macos-15-intel # Latest for Intel-based CPUs
     steps:
       - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@1.28.0
